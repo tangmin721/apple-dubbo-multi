@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cachexic.apple.service.product.dao.ProductDao">
+	
+	<sql id="table"> t_product_base </sql>
+	<sql id="columns"> id,version,create_time,modify_time,delete_time,deleted,name,price,memo,uid </sql>
+	
+	<resultMap id="product" type="com.cachexic.apple.facade.product.entity.Product">
+		<result property="id" column="id" />
+		<result property="version" column="version" />
+		<result property="createTime" column="create_time" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="deleteTime" column="delete_time" />
+		<result property="deleted" column="deleted" />
+		<result property="name" column="name" />
+		<result property="price" column="price" />
+		<result property="memo" column="memo" />
+		<result property="uid" column="uid" />
+	</resultMap>
+	
+	<!--单条插入-->
+	<insert id="insert" parameterType="com.cachexic.apple.facade.product.entity.Product" keyProperty="id" useGeneratedKeys="true">
+		insert into
+		<include refid="table" />
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			version,create_time,deleted,
+			<if test="name != null">name,</if>
+			<if test="price != null">price,</if>
+			<if test="memo != null">memo,</if>
+			<if test="uid != null">uid</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			0,now(),#{deleted},
+			<if test="name != null">#{name},</if>
+			<if test="price != null">#{price},</if>
+			<if test="memo != null">#{memo},</if>
+			<if test="uid != null">#{uid}</if>
+		</trim>
+	</insert>
+
+	<!-- 根据主键查询 -->
+	<select id="selectById" parameterType="long" resultMap="product">
+		select <include refid="columns" /> from <include refid="table" />
+		where
+		id=#{id}
+	</select>
+	
+	<!-- 根据主键批量查询 -->
+	<select id="selectByIds" parameterType="java.util.List" resultMap="product" >
+		select <include refid="columns" /> from <include refid="table" />
+		where id in
+		<foreach collection="list" separator="," item="id" open="(" close=")">
+			#{id}
+		</foreach>
+	</select>
+	
+	
+	<!-- 单条更新:version+1 实现乐观锁 -->
+	<update id="update" parameterType="com.cachexic.apple.facade.product.entity.Product">
+		update
+		<include refid="table" />
+		<set>
+			version = #{version}+1 ,
+            modify_time = now(),
+			deleted = #{deleted},
+			name = #{name},
+			price = #{price},
+			memo = #{memo},
+			uid = #{uid}
+		</set>
+		<where>
+			id = #{id} and version = #{version}
+		</where>
+	</update>
+
+	<!-- 根据id删除 修改标记 -->
+	<update id="deleteById" parameterType="long">
+		update <include refid="table" />
+		<set>
+			version = version+1,
+			delete_time = now(),
+			deleted = 1,
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+
+	<!-- 根据主键批量删除 修改标记 -->
+	<delete id="deleteByIds" parameterType="java.util.List">
+		update <include refid="table" />
+		<set>
+			version = version+1,
+			delete_time = now(),
+			deleted = 1,
+		</set>
+		where id in
+		<foreach collection="list" separator="," item="id" open="(" close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<!-- 根据id彻底删除 -->
+	<delete id="removeById" parameterType="long">
+		delete from <include refid="table" /> where id=#{id}
+	</delete>
+	
+	<!-- 根据ids批量彻底删除 -->
+	<delete id="removeByIds" parameterType="java.util.List">
+		delete from <include refid="table" /> where id in
+		<foreach collection="list" separator="," item="id" open="(" close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!--片段list字段查询器-->
+	<sql id="selectorFields">
+		select
+		<if test="fields != null">
+			${fields}
+		</if>
+		<if test="fields == null">
+			<include refid="columns" />
+		</if>
+		from  <include refid="table" />
+	</sql>
+	
+	<!--片段list条件判断-->
+	<sql id="selectorWhere">
+		<where>
+			<if test="deleted != null and deleted !=''"> and deleted=#{deleted}</if>
+			<if test="name != null and name !=''"> 
+				<if test="nameLike == false"> and name=#{name}</if>
+				<if test="nameLike == true"> and name like  CONCAT('%',#{name},'%')</if>
+			</if>
+			<if test="price != null and price !=''"> 
+				<if test="priceLike == false"> and price=#{price}</if>
+				<if test="priceLike == true"> and price like  CONCAT('%',#{price},'%')</if>
+			</if>
+			<if test="memo != null and memo !=''"> 
+				<if test="memoLike == false"> and memo=#{memo}</if>
+				<if test="memoLike == true"> and memo like  CONCAT('%',#{memo},'%')</if>
+			</if>
+			<if test="uid != null and uid !=''"> 
+				<if test="uidLike == false"> and uid=#{uid}</if>
+				<if test="uidLike == true"> and uid like  CONCAT('%',#{uid},'%')</if>
+			</if>
+			<!--<if test="startTime != null"> and birthday <![CDATA[   >=  ]]>#{startTime} </if>
+			<if test="endTime != null"> and  birthday <![CDATA[   <  ]]> #{endTime}</if>
+			 and deleted=0
+			-->
+		</where>
+	</sql>
+	
+	<!--片段list排序-->
+	<sql id="selectorOrder">
+		<if test="orderFields != null and orderFields.size >0">
+			order by
+			<foreach collection="orderFields" separator="," item="orderField">
+				${orderField.fieldName} ${orderField.order}
+			</foreach>
+		</if>
+	</sql>
+	
+	<!--片段list分页-->
+	<sql id="selectorLimit">
+		<if test="startRow != null">
+			limit  #{startRow},#{pageSize}
+		</if>
+	</sql>
+	
+	<!--查询所有记录-->
+	<select id="selectList" parameterType="com.cachexic.apple.facade.product.entity.ProductQuery" resultMap="product">
+		<include refid="selectorFields" />
+		<include refid="selectorWhere" />
+		<include refid="selectorOrder" />
+	</select>
+	
+	<!-- 分页 -->
+	<select id="selectListPage" parameterType="com.cachexic.apple.facade.product.entity.ProductQuery" resultMap="product">
+		<include refid="selectorFields" />
+		<include refid="selectorWhere" />
+		<include refid="selectorOrder" />
+		<include refid="selectorLimit" />
+	</select>
+	
+	<!--总条数-->
+	<select id="selectListTotal" parameterType="com.cachexic.apple.facade.product.entity.ProductQuery" resultType="long">
+		select count(1) from <include refid="table" />
+		<include refid="selectorWhere" />
+	</select>
+	
+	<!--///////////////////////////////自定义/////////////////////////-->
+	<!--获取最大排序号-->
+	<select id="selectMaxSeq" resultType="int">
+		select max(seq) from <include refid="table" />
+	</select>
+	
+	<!--校验Name是否存在-->
+	<select id="selectCheckNameExit" resultType="long">
+		select count(1) from <include refid="table" />
+		<where>
+			<if test="name != null and  name !=''"> and name=#{name}</if>
+			<if test="id != null and  id !=''"> and id!=#{id}</if>
+		</where>
+	</select>
+</mapper>
