@@ -3,9 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<import resource="config/*.xml"/>
+	<import resource="classpath:config/*.xml"/>
 
 	<!--注意，只需要引入一次-->
-	<import resource="dubbo/dubbo-consumer.xml"/>
+	<import resource="classpath:dubbo/dubbo-consumer.xml"/>
 
 </beans>

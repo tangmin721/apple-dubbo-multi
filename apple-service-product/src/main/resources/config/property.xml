@@ -9,6 +9,8 @@
 			<list>
 				<!-- 读取jdbc配置 -->
 				<value>classpath:properties/jdbc.properties</value>
+				<!-- 读取dubbo配置 -->
+				<value>classpath:properties/dubbo.properties</value>
 				<!-- 读取memcache配置
 				<value>classpath:properties/jdbc.properties</value>
 				 -->

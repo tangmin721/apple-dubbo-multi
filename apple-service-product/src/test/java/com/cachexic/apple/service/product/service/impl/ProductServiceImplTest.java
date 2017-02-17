@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cachexic.apple.common.junit.SpringJunitTest;
 import com.cachexic.apple.common.mybatis.tool.generation.generator.CodeGenerator;
 import com.cachexic.apple.facade.product.entity.Product;
+import com.cachexic.apple.facade.product.entity.ProductQuery;
 import com.cachexic.apple.service.product.dao.ProductDao;
 import com.cachexic.apple.service.product.service.ProductService;
 import org.junit.Test;
@@ -87,6 +88,12 @@ public class ProductServiceImplTest extends SpringJunitTest{
     @Test
     public void selectById() throws Exception {
         System.out.println("12:"+JSON.toJSONString(productService.selectById(2l)));
+    }
+
+    @Test
+    public void selectListPagination() throws Exception {
+        ProductQuery query = new ProductQuery();
+        System.out.println("12:"+JSON.toJSONString(productService.selectListPagination(query)));
     }
 
     public static void main(String[] args) {

@@ -148,7 +148,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>apple-single-module</finalName>
+        <finalName>${project.artifactId}</finalName>
     </build>
 
 

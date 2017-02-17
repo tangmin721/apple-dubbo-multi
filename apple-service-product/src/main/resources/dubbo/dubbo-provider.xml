@@ -15,6 +15,8 @@
 	<dubbo:protocol name="dubbo" port="20881" />
 
 	<!-- 监控中心配置，protocol="registry"，表示从注册中心发现监控中心地址 -->
+	<!-- 监控中心协议，如果为protocol="registry"，表示从注册中心发现监控中心地址. -->
+	<!-- 否则直连监控中心,直连监控中心服务器地址，如：address="apple01:7070" -->
 	<dubbo:monitor protocol="registry" />
 
 	<!-- 当ProtocolConfig和ServiceConfig某属性没有配置时,采用此缺省值 -->

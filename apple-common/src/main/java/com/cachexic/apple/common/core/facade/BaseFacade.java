@@ -8,7 +8,7 @@ import com.cachexic.apple.common.core.entity.Pagination;
 import java.util.List;
 
 /**
- * <p>Description:服务层 </p>
+ * <p>Description:暴露接口层 </p>
  *
  * @author tangm
  * @version 1.0

@@ -45,6 +45,19 @@ public class ProductController extends BaseController {
 		model.addAttribute("page", page);
 		return "product/productBase/productList";
 	}
+
+	/**
+	 * 根据商品id获取商品信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("getProductById/{id}")
+	@ResponseBody
+	public String getProductById(@PathVariable Long id){
+		AjaxCallback ok = AjaxCallback.OK("操作成功");
+		ok.setData(productFacade.selectById(id));
+		return JSON.toJSONString(ok);
+	}
 	
 	/**
 	 * 进入新增form表单页面

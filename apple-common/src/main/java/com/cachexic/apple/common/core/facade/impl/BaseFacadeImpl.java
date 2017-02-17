@@ -3,6 +3,7 @@ package com.cachexic.apple.common.core.facade.impl;
 import com.cachexic.apple.common.core.entity.BaseEntity;
 import com.cachexic.apple.common.core.entity.BaseQuery;
 import com.cachexic.apple.common.core.entity.Pagination;
+import com.cachexic.apple.common.core.facade.BaseFacade;
 import com.cachexic.apple.common.core.service.BaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ import java.util.List;
  * @date: 2016年2月18日
  * @version: 1.0
  */
-public abstract class BaseFacadeImpl<T extends BaseEntity, Q extends BaseQuery> implements BaseService<T, Q> {
+public abstract class BaseFacadeImpl<T extends BaseEntity, Q extends BaseQuery> implements BaseFacade<T, Q> {
 
 	protected static final Logger logger = LoggerFactory.getLogger(BaseFacadeImpl.class);
 

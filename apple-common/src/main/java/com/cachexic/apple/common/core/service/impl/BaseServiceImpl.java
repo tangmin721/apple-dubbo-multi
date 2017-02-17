@@ -112,6 +112,7 @@ public abstract class BaseServiceImpl<T extends BaseEntity, Q extends BaseQuery>
 		return this.dao().selectListTotal(query);
 	}
 
+	@Transactional
 	public Pagination<T> selectListPagination(Q query) {
 		Pagination<T> pagination = new Pagination<T>(query.getPageCurrent(), query.getPageSize(), this.selectListTotal(query));
 		pagination.setList(this.selectListPage(query));
