@@ -114,8 +114,8 @@ public abstract class BaseServiceImpl<T extends BaseEntity, Q extends BaseQuery>
 
 	@Transactional
 	public Pagination<T> selectListPagination(Q query) {
-		Pagination<T> pagination = new Pagination<T>(query.getPageCurrent(), query.getPageSize(), this.selectListTotal(query));
-		pagination.setList(this.selectListPage(query));
+		Pagination<T> pagination = new Pagination<T>(query.getPageCurrent(), query.getPageSize(), this.dao().selectListTotal(query));
+		pagination.setList(this.dao().selectListPage(query));
 		return pagination;
 	}
 

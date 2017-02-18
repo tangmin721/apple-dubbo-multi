@@ -24,30 +24,30 @@ public class BaseEntity implements Serializable {
 	 * 创建时间
 	 */
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	//@JSONField(format = "yyyy-MM-dd HH:mm:ss")
-	@JSONField(serialize = false)
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	//@JSONField(serialize = false)
 	protected Date createTime;
 
 	/**
 	 * 最后一次修改时间
 	 */
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	//@JSONField(format = "yyyy-MM-dd HH:mm:ss")
-	@JSONField(serialize = false)
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	//@JSONField(serialize = false)
 	protected Date modifyTime;
 
 	/**
 	 * 最后一次删除时间
 	 */
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-	//@JSONField(format = "yyyy-MM-dd HH:mm:ss")
-	@JSONField(serialize = false)
+	@JSONField(format = "yyyy-MM-dd HH:mm:ss")
+	//@JSONField(serialize = false)
 	protected Date deleteTime;
 
 	/**
 	 * 删除标记  默认未删除 0：未删除  1  已删除
 	 */
-	@JSONField(serialize = false)//代表fastjson序列化的时候，忽略此字段
+	//@JSONField(serialize = false)//代表fastjson序列化的时候，忽略此字段
 	private Boolean deleted = false;
 
 	public Long getId() {

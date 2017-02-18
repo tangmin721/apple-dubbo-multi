@@ -28,6 +28,11 @@ public class ProductController extends BaseController {
 	
 	@Autowired
 	private ProductFacade productFacade;
+
+	@RequestMapping("productIndex")
+	public String index(Model model){
+		return "product/productBase/productIndex";
+	}
 	
 	/**
 	 * 进入list页面
@@ -54,8 +59,14 @@ public class ProductController extends BaseController {
 	@RequestMapping("getProductById/{id}")
 	@ResponseBody
 	public String getProductById(@PathVariable Long id){
-		AjaxCallback ok = AjaxCallback.OK("操作成功");
-		ok.setData(productFacade.selectById(id));
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			ok.setData(productFacade.selectById(id));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR(e.getMessage());
+		}
 		return JSON.toJSONString(ok);
 	}
 	
@@ -135,6 +146,285 @@ public class ProductController extends BaseController {
 		return JSON.toJSONString(ok);
 	}
 	
-	
+	/*************************************************测试BaceFacade的各方法*****************************************************************/
+	/**
+	 * 根据实体对象新增记录.
+	 * Long insert(T entity);
+	 * @param entity
+	 * @return 返回entity.getId()
+	 */
+	@RequestMapping("insert")
+	@ResponseBody
+	public String insert(Product entity){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			entity = new Product();
+			entity.setName("insert商品1");
+			entity.setPrice(2d);
+			entity.setMemo("test insert简要描述");
+			entity.setUid(1l);
+			ok.setData("entityId:"+productFacade.insert(entity));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR("错误信息："+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+	/**
+	 * 根据ID查找记录.
+	 * T selectById(Long id);
+	 * @param id
+	 * @return 返回T
+	 */
+	@RequestMapping("selectById/{id}")
+	@ResponseBody
+	public String selectById(@PathVariable  Long id){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			ok.setData(productFacade.selectById(id));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR(" 错误信息： "+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+
+	/**
+	 * 批量根据ids查找记录.
+	 * List<T> selectByIds(List<Long> ids);
+	 * #@param ids
+	 * @return 返回List<T>
+	 */
+	@RequestMapping("selectByIds ")
+	@ResponseBody
+	public String selectByIds(){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			List<Long> ids = Lists.newArrayList();
+			ids.add(2l);
+			ids.add(3l);
+			ids.add(4l);
+			ok.setData(productFacade.selectByIds(ids));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR("错误信息："+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+
+	/**
+	 * 更新实体对应的记录.
+	 * Long update(T entity);
+	 * @param entity
+	 * @return
+	 */
+	@RequestMapping("update")
+	@ResponseBody
+	public String update(Product entity){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			entity = new Product();
+//			entity.setId(2l);
+//			entity.setVersion(2);
+			entity = this.productFacade.selectById(2l);
+			System.out.println((JSON.toJSONString(entity)));
+//			Thread.sleep(10000);//睡10秒，后台修改数据库
+//			entity = this.productFacade.selectById(2l);//再次查询，因为没起事务，所以，这两次查询结果是不一样的。如果放在同一个事务里，两次查询结果应该一样，不管后台有没有更新数据库。
+//			System.out.println((JSON.toJSONString(entity)));
+			entity.setName("update商品1");
+			entity.setPrice(entity.getPrice()+1);
+			entity.setMemo("update简要描述");
+			entity.setUid(1l);
+			ok.setData("entityId:"+productFacade.update(entity));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR("错误信息："+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+
+	/**
+	 * 根据id deleted标记为1删除
+	 * Long deleteById(Long id);
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("deleteById/{id}")
+	@ResponseBody
+	public String deleteById(@PathVariable Long id){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			ok.setData("修改deleted标记的id个数："+productFacade.deleteById(id));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR("错误信息："+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+	/**
+	 * 根据ids deleted标记为1删除
+	 * Long deleteByIds(List<Long> ids);
+	 * #@param ids
+	 * @return
+	 */
+	@RequestMapping("deleteByIds")
+	@ResponseBody
+	public String deleteByIds(){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			List<Long> ids = Lists.newArrayList();
+			ids.add(2l);
+			ids.add(3l);
+			ids.add(4l);
+			ok.setData("修改deleted标记的ids个数："+productFacade.deleteByIds(ids));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR("错误信息："+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+
+	/**
+	 * 根据id  彻底删除
+	 * Long removeById(Long id);
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("removeById/{id}")
+	@ResponseBody
+	public String removeById(@PathVariable Long id){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			ok.setData("remove个数："+productFacade.removeById(id));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR("错误信息："+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+
+	/**
+	 * 根据ids 彻底删除
+	 * Long removeByIds(List<Long> ids);
+	 * #@param ids
+	 * @return
+	 */
+	@RequestMapping("removeByIds")
+	@ResponseBody
+	public String removeByIds(){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			List<Long> ids = Lists.newArrayList();
+			ids.add(2l);
+			ids.add(3l);
+			ids.add(4l);
+			ok.setData("彻底删除的ids个数："+productFacade.removeByIds(ids));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR("错误信息："+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+	/**
+	 * 查询所有记录
+	 * List<T> selectList(Q query);
+	 * #@param query
+	 * @return
+	 */
+	@RequestMapping("selectList")
+	@ResponseBody
+	public String selectList(){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			ProductQuery query = new ProductQuery();
+			ok.setData(productFacade.selectList(query));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR(" 错误信息： "+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+
+	/**
+	 * limit Page查询
+	 * List<T> selectListPage(Q query);
+	 * #@param query
+	 * @return 返回结果集
+	 */
+	@RequestMapping("selectListPage")
+	@ResponseBody
+	public String selectListPage(){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			ProductQuery query = new ProductQuery();
+			ok.setData(productFacade.selectListPage(query));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR(" 错误信息： "+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+	/**
+	 * 总条数
+	 * Long selectListTotal(Q query);
+	 * #@param query
+	 * @return
+	 */
+	@RequestMapping("selectListTotal")
+	@ResponseBody
+	public String selectListTotal(){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			ProductQuery query = new ProductQuery();
+			ok.setData(productFacade.selectListTotal(query));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR(" 错误信息： "+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
+
+
+	/**
+	 * 页面分页
+	 * Pagination<T> selectListPagination(Q query);
+	 * #@param query
+	 * @return 返回分页对象
+	 */
+	@RequestMapping("selectListPagination")
+	@ResponseBody
+	public String selectListPagination(){
+		AjaxCallback ok = null;
+		try {
+			ok = AjaxCallback.OK("操作成功");
+			ProductQuery query = new ProductQuery();
+			ok.setData(productFacade.selectListPagination(query));
+		} catch (Exception e) {
+			e.printStackTrace();
+			ok = AjaxCallback.ERROR(" 错误信息： "+e.toString());
+		}
+		return JSON.toJSONString(ok);
+	}
 
 }
