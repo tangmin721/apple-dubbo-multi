@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.cachexic.apple.common.core.ajax.AjaxCallback;
 import com.cachexic.apple.common.core.controller.BaseController;
 import com.cachexic.apple.common.core.entity.Pagination;
+import com.cachexic.apple.common.exception.ValidateOtherException;
 import com.cachexic.apple.facade.product.entity.Product;
 import com.cachexic.apple.facade.product.entity.ProductQuery;
 import com.cachexic.apple.facade.product.facade.ProductFacade;
@@ -25,7 +26,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/product/productBase")
 public class ProductController extends BaseController {
-	
+
 	@Autowired
 	private ProductFacade productFacade;
 
@@ -64,7 +65,7 @@ public class ProductController extends BaseController {
 			ok = AjaxCallback.OK("操作成功");
 			ok.setData(productFacade.selectById(id));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			ok = AjaxCallback.ERROR(e.getMessage());
 		}
 		return JSON.toJSONString(ok);
@@ -107,9 +108,9 @@ public class ProductController extends BaseController {
 		AjaxCallback result = null;
 		long entityId = productFacade.saveOrUpdate(entity);
 		if (entityId > 0) {
-			result = AjaxCallback.OK("操作成功");
+			result = AjaxCallback.OK_CODE("操作成功");
 		}else {
-			result = AjaxCallback.ERROR("操作失败");
+			result = AjaxCallback.ERROR_CODE("操作失败");
 		}
 		return JSON.toJSONString(result);
 	}*/
@@ -165,9 +166,12 @@ public class ProductController extends BaseController {
 			entity.setMemo("test insert简要描述");
 			entity.setUid(1l);
 			ok.setData("entityId:"+productFacade.insert(entity));
-		} catch (Exception e) {
-			e.printStackTrace();
-			ok = AjaxCallback.ERROR("错误信息："+e.toString());
+		} catch (ValidateOtherException e) {
+			logger.error(e.getMessage());
+			ok = AjaxCallback.ERROR("错误信息1："+e.getMessage());
+		} catch (Exception e){
+			logger.error(e.getMessage());
+			ok = AjaxCallback.ERROR("错误信息2："+e.getMessage());
 		}
 		return JSON.toJSONString(ok);
 	}

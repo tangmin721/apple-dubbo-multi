@@ -51,4 +51,5 @@ public class ValidateOtherException extends BizException{
 	public ValidateOtherException newInstance(String msgFormat, Object... args) {
 		return new ValidateOtherException(this.code, msgFormat, args);
 	}
+
 }
