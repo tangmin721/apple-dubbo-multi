@@ -44,6 +44,13 @@ public class Pagination<T extends BaseEntity> implements Serializable {
 	 */
 	private Long pageStart=0l;
 
+	/**
+	 * dubbo 序列化机制使用的是Hessian，需要增加无参构造
+	 */
+	public Pagination(){
+
+	}
+
 	public Pagination(Long pageCurrent, Long pageSize, Long total) {
 		this.pageCurrent = pageCurrent;
 		this.pageSize = pageSize;

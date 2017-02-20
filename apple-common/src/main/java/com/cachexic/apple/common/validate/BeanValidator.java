@@ -45,7 +45,7 @@ public class BeanValidator {
 			
 			//key:msg  value:field
 			errorMap.put(v.getMessage(), v.getPropertyPath().toString());
-			logger.error("<br>::::hibernate validate ERROR:"+v.getRootBean().getClass().getName()+"."+v.getPropertyPath().toString()
+			logger.error("<br>::::hibernate validate ERROR_CODE:"+v.getRootBean().getClass().getName()+"."+v.getPropertyPath().toString()
 					+" violate rule:@"+annClazz.getSimpleName()+",message:"+v.getMessage());
 		}
 		

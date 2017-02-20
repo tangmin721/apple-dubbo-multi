@@ -9,8 +9,8 @@
     <title>index</title>
 </head>
 <body>
-<a href="/order/orderBase/orderList">订单中心</a>
+<a href="/order/orderBase/productIndex">订单中心</a>
 
-<a href="/product/productBase/productList">商品中心</a>
+<a href="/product/productBase/productIndex">商品中心</a>
 </body>
 </html>

@@ -2,19 +2,18 @@ package com.cachexic.apple.common.core.ajax;
 
 /**
  * @Description: BJUI ajax 返回回调信息
- * @Table: TODO
  * @author: tangm
  * @date: 2016年2月19日 
  * @version: 1.0
  */
 public class AjaxCallback {
 	
-	public Object data;
-	
-	public final static int OK = 200;
-	public final static int ERROR = 300;
-	public final static int TIMEOUT = 301;
-	public final static int CHECK_FAILD = 350;
+	public static final int OK_CODE = 200;
+	public static final int ERROR_CODE = 300;
+	public static final int TIMEOUT_CODE = 301;
+	public static final int CHECK_FAILD_CODE = 350;
+
+	private Object data;
 	
 	/**
 	 * 必选。状态码(ok = 200, error = 300, timeout = 301)，可以在BJUI.init时配置三个参数的默认值。
@@ -71,7 +70,7 @@ public class AjaxCallback {
 	public static AjaxCallback OK(String msg){
 		AjaxCallback acb = new AjaxCallback();
 		acb.setMessage(msg);
-		acb.setStatusCode(OK);
+		acb.setStatusCode(OK_CODE);
 		return acb;
 	}
 	
@@ -83,7 +82,7 @@ public class AjaxCallback {
 	public static AjaxCallback ERROR(String msg){
 		AjaxCallback acb = new AjaxCallback();
 		acb.setMessage(msg);
-		acb.setStatusCode(ERROR);
+		acb.setStatusCode(ERROR_CODE);
 		return acb;
 	}
 	
@@ -95,7 +94,7 @@ public class AjaxCallback {
 	public static AjaxCallback TIMEOUT(String msg){
 		AjaxCallback acb = new AjaxCallback();
 		acb.setMessage(msg);
-		acb.setStatusCode(TIMEOUT);
+		acb.setStatusCode(TIMEOUT_CODE);
 		return acb;
 	}
 	

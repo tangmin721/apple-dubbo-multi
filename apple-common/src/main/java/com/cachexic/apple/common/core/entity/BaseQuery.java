@@ -55,7 +55,6 @@ public class BaseQuery implements Serializable {
 
 	public BaseQuery() {
 		this.startRow = (this.pageCurrent - 1) * this.pageSize;
-		//this.orderFields.add(new OrderField(this.orderField, this.orderDirection));
 	}
 
 	public Long getPageSize() {
